@@ -1,0 +1,120 @@
+---
+import type { Company } from "@/data/metrics";
+interface Props {
+  company: Company;
+}
+const { company: c } = Astro.props;
+const down = c.dayChange.trim().startsWith("-");
+const deltaColor = down ? "text-[color:var(--color-down)]" : "text-[color:var(--color-up)]";
+---
+
+<article class="flex flex-col rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/70 p-5">
+  <!-- ── header：身份 + 报价 ── -->
+  <header class="flex items-start justify-between gap-3">
+    <div class="flex items-start gap-3">
+      <div class="flex shrink-0 -space-x-2">
+        {c.logos.map((src, li) => (
+          <span class="grid h-9 w-9 place-items-center overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-[color:var(--color-line)]" style={`z-index:${c.logos.length - li}`}>
+            <img src={src} alt={`${c.name} logo`} width="36" height="36" loading="lazy" decoding="async" class="h-6 w-6 object-contain" />
+          </span>
+        ))}
+      </div>
+      <div>
+        <h3 class="font-[family-name:var(--font-display)] text-xl font-bold tracking-tight text-[color:var(--color-ink)]">{c.name}</h3>
+        <div class="mt-1 flex items-center gap-2 font-mono text-xs text-[color:var(--color-ink-mute)]">
+          <span class="rounded bg-[color:var(--color-surface-2)] px-1.5 py-0.5">{c.ticker}</span>
+          <span>{c.region}</span>
+        </div>
+        <div class="mt-2 flex flex-wrap gap-1.5">
+          {c.focus.map((f) => (
+            <span class="rounded-full border border-[color:var(--color-line)] px-2 py-0.5 text-[11px] text-[color:var(--color-ink-dim)]">{f}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+    <div class="text-right" data-quote={c.yf.join(",")}>
+      <div class="flex items-center justify-end gap-1.5">
+        <span class="hidden h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--color-heat)]" data-q-live title="实时报价"></span>
+        <span class="font-mono text-xl font-semibold tnum text-[color:var(--color-ink)]" data-q-price>{c.last}</span>
+      </div>
+      <div class={`font-mono text-sm tnum ${deltaColor}`} data-q-day>{c.dayChange}</div>
+      <div class="mt-0.5 font-mono text-[11px] tnum text-[color:var(--color-up)]" data-q-ytd>YTD {c.ytd}</div>
+      <div data-spark={c.yf[0]} class="mt-1.5 ml-auto h-7 w-24" aria-hidden="true"></div>
+    </div>
+  </header>
+
+  <!-- ── 双栏：左 = 财务/实时，右 = 监控信号 ── -->
+  <div class="mt-4 grid gap-5 border-t border-[color:var(--color-line-soft)] pt-4 sm:grid-cols-2">
+    <!-- 左栏 -->
+    <div class="space-y-3">
+      <!-- 实时财务（载入后显示）-->
+      <div data-fund={c.yf.join(",")} class="hidden rounded-xl border border-[color:var(--color-heat)]/25 bg-[color:var(--color-heat)]/[0.05] p-3">
+        <div class="mb-2 flex items-center gap-2 text-[10px] uppercase tracking-wider">
+          <span class="h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--color-heat)]"></span>
+          <span class="font-medium text-[color:var(--color-heat)]">实时 · Yahoo</span>
+          <span data-fund-time class="ml-auto font-mono text-[color:var(--color-ink-mute)]"></span>
+        </div>
+
+        <!-- 财报 -->
+        <div class="grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+          <div><span class="text-[color:var(--color-ink-mute)]">报告季末</span> <span data-fund-qend class="font-mono text-[color:var(--color-ink)]">—</span></div>
+          <div><span data-fund-elabel class="text-[color:var(--color-ink-mute)]">财报日</span> <span data-fund-edate class="font-mono text-[color:var(--color-ink)]">—</span></div>
+          <div><span class="text-[color:var(--color-ink-mute)]">营收</span> <span data-fund-qrev class="font-mono text-[color:var(--color-ink)]">—</span></div>
+          <div><span class="text-[color:var(--color-ink-mute)]">净利率</span> <span data-fund-qnm class="font-mono text-[color:var(--color-ink)]">—</span></div>
+        </div>
+
+        <!-- 共识 -->
+        <div class="mt-2.5 flex items-center border-t border-[color:var(--color-heat)]/15 pt-2.5 text-[10px] uppercase tracking-wider">
+          <span class="text-[color:var(--color-ink-mute)]">分析师共识</span>
+          <span data-fund-rec class="ml-auto text-[11px] font-semibold normal-case"></span>
+        </div>
+        <div class="mt-1.5 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+          <div><span class="text-[color:var(--color-ink-mute)]">共识目标</span> <span data-fund-target class="font-mono font-semibold text-[color:var(--color-ink)]">—</span></div>
+          <div><span class="text-[color:var(--color-ink-mute)]">分析师</span> <span data-fund-n class="font-mono text-[color:var(--color-ink)]">—</span></div>
+          <div class="col-span-2"><span class="text-[color:var(--color-ink-mute)]">区间</span> <span data-fund-range class="font-mono text-[color:var(--color-ink-dim)]">—</span></div>
+        </div>
+        <div data-fund-fin class="mt-1.5 text-[11px] text-[color:var(--color-ink-dim)]"></div>
+      </div>
+
+      <!-- 5/19 研报快照 -->
+      {(c.earnings?.highlight || c.targets.length > 0) && (
+        <div class="text-[11px] leading-relaxed">
+          <div class="mb-1.5 flex items-center gap-1.5 uppercase tracking-wider text-[color:var(--color-ink-mute)]">
+            <span>◷</span><span class="text-[10px]">5/19 研报</span>
+          </div>
+          {c.earnings?.highlight && (
+            <p class="text-[color:var(--color-ink-dim)]">{c.earnings.highlight}</p>
+          )}
+          {c.targets.length > 0 && (
+            <div class="mt-1.5 flex flex-wrap gap-1.5">
+              {c.targets.map((t) => (
+                <span class="rounded-md border border-[color:var(--color-line-soft)] px-2 py-1">
+                  <span class="font-mono font-semibold tnum text-[color:var(--color-ink)]">{t.target}</span>
+                  <span class="text-[color:var(--color-ink-mute)]"> {t.bank}</span>
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+
+    <!-- 右栏：核心监控信号（全部 6 条）-->
+    <div>
+      <div class="mb-2.5 text-[10px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">核心监控信号</div>
+      <ul class="space-y-2.5">
+        {c.metrics.map((m) => (
+          <li class="grid grid-cols-[18px_1fr] gap-2">
+            <span class="mt-0.5 font-mono text-[11px] text-[color:var(--color-ink-mute)]/60">{String(m.id).padStart(2, "0")}</span>
+            <div>
+              <p class="text-[13px] font-medium leading-snug text-[color:var(--color-ink)]">{m.name}</p>
+              <p class="mt-0.5 text-[11px] leading-snug text-[color:var(--color-ink-mute)]">
+                <span class="text-[color:var(--color-heat)]/80">→</span> {m.status}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</article>

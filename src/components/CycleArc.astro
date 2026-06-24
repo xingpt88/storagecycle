@@ -1,0 +1,76 @@
+---
+// 周期热度弧 — 整页的签名元素
+// 把"上行周期位置"画成温度：谷底(冷青) → 中段(琥珀) → 顶点(热红)
+interface Props {
+  value: number; // 0–100，周期位置
+  size?: number; // svg 宽度 px
+  showLabels?: boolean;
+  id?: string;
+}
+const { value, size = 420, showLabels = true, id = "arc" } = Astro.props;
+
+const r = 170;
+const cx = 200;
+const cy = 196;
+const f = Math.min(1, Math.max(0, value / 100));
+const arcLen = Math.PI * r; // 半圆弧长
+const arcOff = arcLen * (1 - f); // dashoffset 终值（露出 f 比例）
+
+// marker 坐标
+const ang = Math.PI - f * Math.PI; // 180° → 0°
+const mx = cx + r * Math.cos(ang);
+const my = cy - r * Math.sin(ang);
+
+const h = size * (220 / 400);
+---
+
+<div class="cycle-arc" style={`width:${size}px;max-width:100%`}>
+  <svg viewBox="0 0 400 220" width={size} height={h} role="img"
+    aria-label={`周期位置 ${value}%`} style="overflow:visible">
+    <defs>
+      <linearGradient id={`${id}-heat`} x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="var(--color-cycle-cold)" />
+        <stop offset="0.35" stop-color="var(--color-cycle-cool)" />
+        <stop offset="0.62" stop-color="var(--color-cycle-warm)" />
+        <stop offset="1" stop-color="var(--color-cycle-hot)" />
+      </linearGradient>
+      <filter id={`${id}-glow`} x="-50%" y="-50%" width="200%" height="200%">
+        <feGaussianBlur stdDeviation="5" result="b" />
+        <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+      </filter>
+    </defs>
+
+    <!-- 刻度 -->
+    {[0, 0.25, 0.5, 0.75, 1].map((t) => {
+      const a = Math.PI - t * Math.PI;
+      const x1 = cx + (r - 14) * Math.cos(a);
+      const y1 = cy - (r - 14) * Math.sin(a);
+      const x2 = cx + (r + 2) * Math.cos(a);
+      const y2 = cy - (r + 2) * Math.sin(a);
+      return <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="var(--color-line)" stroke-width="1.5" />;
+    })}
+
+    <!-- 轨道 -->
+    <path d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+      fill="none" stroke="var(--color-line)" stroke-width="10" stroke-linecap="round" opacity="0.5" />
+
+    <!-- 进度（热度渐变 + 画入动画） -->
+    <path class="arc-progress" d={`M ${cx - r} ${cy} A ${r} ${r} 0 0 1 ${cx + r} ${cy}`}
+      fill="none" stroke={`url(#${id}-heat)`} stroke-width="10" stroke-linecap="round"
+      style={`--arc-len:${arcLen};--arc-off:${arcOff};stroke-dasharray:${arcLen};stroke-dashoffset:${arcLen};animation:arc-grow 1.6s cubic-bezier(.22,1,.36,1) .25s forwards`} />
+
+    <!-- marker -->
+    <g class="arc-marker" style={`transform-origin:${mx}px ${my}px;opacity:0;animation:marker-in .5s cubic-bezier(.22,1,.36,1) 1.5s forwards`}>
+      <circle cx={mx} cy={my} r="11" fill="var(--color-heat)" opacity="0.18" filter={`url(#${id}-glow)`} />
+      <circle cx={mx} cy={my} r="6" fill="var(--color-heat)" stroke="#0b0e14" stroke-width="2" />
+    </g>
+  </svg>
+
+  {showLabels && (
+    <div class="mt-[-8px] flex justify-between px-2 font-mono text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">
+      <span>谷底</span>
+      <span class="text-[color:var(--color-cycle-warm)]">中段</span>
+      <span>顶点</span>
+    </div>
+  )}
+</div>

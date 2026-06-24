@@ -1,0 +1,598 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import Section from "@/components/Section.astro";
+import Table from "@/components/Table.astro";
+import CycleArc from "@/components/CycleArc.astro";
+import CompanyCard from "@/components/CompanyCard.astro";
+import InflectionCard from "@/components/InflectionCard.astro";
+import PriceChart from "@/components/react/PriceChart.tsx";
+
+const chartDefs = [
+  { symbol: "000660.KS", name: "SK海力士", color: "#5BC8E8" },
+  { symbol: "MU", name: "美光", color: "#F2A93B" },
+  { symbol: "005930.KS", name: "三星", color: "#A78BFA" },
+  { symbol: "SNDK", name: "闪迪", color: "#3DD68C" },
+  { symbol: "285A.T", name: "铠侠", color: "#F25D5D" },
+  { symbol: "WDC", name: "西部数据", color: "#F472B6" },
+  { symbol: "STX", name: "希捷", color: "#FBBF24" },
+];
+import {
+  META,
+  headlineStats,
+  companies,
+  inflectionMetrics,
+  priceMonitors,
+  fundamentals,
+  techRoadmap,
+  trendForceJudgments,
+  dramContract,
+  nandContract,
+  earningsTable,
+  hbmMarket,
+  industryValue,
+  spotPrices,
+  spotNote,
+  calendar,
+  micronPreview,
+} from "@/data/metrics";
+
+const up = "text-[color:var(--color-up)]";
+const down = "text-[color:var(--color-down)]";
+const ink = "text-[color:var(--color-ink)]";
+
+const stars = (n: number) =>
+  `<span class="text-[color:var(--color-heat)]">${"★".repeat(n)}</span><span class="text-[color:var(--color-line)]">${"★".repeat(5 - n)}</span>`;
+---
+
+<BaseLayout
+  title="存储周期监控终端 · 截至 2026-05-19"
+  description="存储（DRAM/NAND/HBM）行业与企业监控指标体系：周期拐点、合约价、各公司指标、投行目标价与事件日历。"
+>
+  <Sidebar />
+
+  <main class="lg:pl-[248px]">
+    <div class="mx-auto w-full max-w-6xl px-5 py-8 sm:px-8 lg:px-12">
+      <!-- ───────── HERO / 概览 ───────── -->
+      <section id="overview" data-section="overview" class="scroll-mt-8">
+        <div class="grid items-center gap-8 lg:grid-cols-[1.05fr_0.95fr]">
+          <div class="reveal">
+            <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-[color:var(--color-ink-mute)]">
+              <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--color-heat)]"></span>
+              实时监控 · {META.updated}
+            </div>
+            <h1 class="mt-4 font-[family-name:var(--font-display)] text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl">
+              存储<span class="heat-text">上行周期</span><br />监控终端
+            </h1>
+            <p class="mt-4 max-w-md text-[15px] leading-relaxed text-[color:var(--color-ink-dim)]">
+              {META.cycleSummary}存储是半导体中周期性最强的板块，本终端追踪
+              <span class={ink}>四大拐点</span>、合约价、六家龙头与关键事件，定位「我们处在周期的什么位置」。
+            </p>
+            <div class="mt-5 flex flex-wrap gap-2">
+              {META.sources.map((s) => (
+                <span class="flex items-center gap-1.5 rounded-full border border-[color:var(--color-line)] py-1 pl-1 pr-2.5 text-[11px] text-[color:var(--color-ink-dim)]">
+                  {s.logo ? (
+                    <span class="grid h-5 w-5 shrink-0 place-items-center overflow-hidden rounded-full bg-white">
+                      <img src={s.logo} alt="" width="20" height="20" loading="lazy" decoding="async" class="h-3.5 w-3.5 object-contain" />
+                    </span>
+                  ) : (
+                    <span class="grid h-5 w-5 shrink-0 place-items-center rounded-full bg-[color:var(--color-surface-2)] text-[color:var(--color-ink-mute)]">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/></svg>
+                    </span>
+                  )}
+                  {s.name}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <!-- 签名：周期热度弧 -->
+          <div class="reveal flex flex-col items-center" style="animation-delay:120ms">
+            <CycleArc value={65} size={420} id="hero" />
+            <div class="mt-1 text-center">
+              <div class="font-mono text-5xl font-bold tnum text-[color:var(--color-heat)]">65%</div>
+              <div class="mt-1 text-sm text-[color:var(--color-ink-mute)]">上行周期中段 · 未到顶点</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- KPI 仪表带 -->
+        <div class="mt-10 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-line)] lg:grid-cols-4">
+          {headlineStats.map((s, i) => (
+            <div class="reveal bg-[color:var(--color-surface)]/80 p-5" style={`animation-delay:${i * 60}ms`}>
+              <div class="text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">{s.label}</div>
+              <div class="mt-2 font-mono text-2xl font-bold tnum text-[color:var(--color-ink)] sm:text-3xl">{s.value}</div>
+              <div class="mt-1 text-[11px] text-[color:var(--color-ink-mute)]">{s.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        <!-- YTD 走势对比（置顶）-->
+        <div class="mt-10">
+          <div class="mb-3 flex items-center gap-2 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">
+            <span class="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[color:var(--color-heat)]"></span>
+            YTD 走势对比 · 实时
+          </div>
+          <PriceChart client:visible defs={chartDefs} />
+        </div>
+      </section>
+
+      <!-- ───────── 企业 ───────── -->
+      <Section
+        id="companies"
+        eyebrow="01 — 企业级监控"
+        title="龙头企业 · 监控指标"
+        desc="点击切换公司 · 股价 / 分析师共识 / TTM 财务为实时，其余为 5/19 研报快照"
+      >
+        <div class="grid gap-5 lg:grid-cols-[236px_1fr]">
+          <!-- 选择器：桌面竖排 watchlist / 移动横向 pill -->
+          <aside class="self-start lg:sticky lg:top-4">
+            <div class="flex gap-2 overflow-x-auto pb-1 lg:flex-col lg:gap-1.5 lg:overflow-visible lg:pb-0">
+              {companies.map((c, i) => (
+                <button
+                  type="button"
+                  data-select={i}
+                  aria-pressed={i === 0 ? "true" : "false"}
+                  class="company-pill flex shrink-0 items-center gap-2.5 rounded-xl border px-3 py-2.5 text-left"
+                >
+                  <span class="grid h-8 w-8 shrink-0 place-items-center overflow-hidden rounded-lg bg-white shadow-sm ring-1 ring-[color:var(--color-line)]">
+                    <img src={c.logos[0]} alt="" width="32" height="32" loading="lazy" decoding="async" class="h-5 w-5 object-contain" />
+                  </span>
+                  <span class="min-w-0">
+                    <span class="block truncate text-sm font-medium text-[color:var(--color-ink)]">{c.name}</span>
+                    <span class="flex items-center gap-1.5 font-mono text-[10px] text-[color:var(--color-ink-mute)]" data-quote={c.yf.join(",")}>
+                      <span>{c.ticker}</span>
+                      <span data-q-day class="tnum">{c.dayChange}</span>
+                    </span>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </aside>
+
+          <!-- 详情：全部渲染，只显示选中的一家 -->
+          <div>
+            {companies.map((c, i) => (
+              <div data-company={i} class={i === 0 ? "" : "hidden"}>
+                <CompanyCard company={c} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </Section>
+
+      <!-- ───────── 行业 ───────── -->
+      <Section
+        id="industry"
+        eyebrow="02 — 行业指标"
+        title="周期拐点与基本面"
+        desc={META.cycleSummary}
+      >
+        <div class="mb-6 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">四大拐点指标</div>
+        <div class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+          {inflectionMetrics.map((m, i) => (
+            <InflectionCard m={m} index={i} />
+          ))}
+        </div>
+
+        <div class="mt-10 mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">价格监控</div>
+        <Table
+          head={["产品", "数据源", "当前状态 Q2 2026E", "下次更新"]}
+          rows={priceMonitors.map((p) => [
+            { t: p.product, c: ink },
+            { t: p.source },
+            { t: p.status, mono: true, c: "text-[color:var(--color-data)]" },
+            { t: p.next },
+          ])}
+        />
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-2">
+          <div>
+            <div class="mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">供需基本面</div>
+            <Table
+              head={["指标", "当前值", "正常范围"]}
+              rows={fundamentals.map((f) => [
+                { t: f.metric, c: ink },
+                { t: f.current, mono: true },
+                { t: f.normal, mono: true },
+              ])}
+            />
+          </div>
+          <div>
+            <div class="mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">技术路线监控</div>
+            <Table
+              head={["技术", "领先者", "时间线"]}
+              rows={techRoadmap.map((t) => [
+                { t: t.tech, c: ink },
+                { t: t.leader },
+                { t: t.timeline, mono: true },
+              ])}
+            />
+          </div>
+        </div>
+
+        <div class="mt-10 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/60 p-6">
+          <div class="mb-4 text-[11px] uppercase tracking-wider text-[color:var(--color-heat)]">关键 TrendForce 判断</div>
+          <ol class="grid gap-3 sm:grid-cols-2">
+            {trendForceJudgments.map((j, i) => (
+              <li class="flex gap-3 text-sm leading-relaxed text-[color:var(--color-ink-dim)]">
+                <span class="font-mono text-xs text-[color:var(--color-heat)]/70">{String(i + 1).padStart(2, "0")}</span>
+                <span>{j}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </Section>
+
+      <!-- ───────── 价格与业绩 ───────── -->
+      <Section
+        id="prices"
+        eyebrow="03 — 价格与业绩"
+        title="合约价、业绩与产值"
+        desc="TrendForce 合约价预测、各公司最新财报与产业链产值"
+      >
+        <div class="grid gap-6 lg:grid-cols-2">
+          <div>
+            <div class="mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">DRAM 合约价</div>
+            <Table
+              head={["季度", "QoQ", "同比", "驱动"]}
+              rows={dramContract.map((d) => [
+                { t: d.quarter, c: ink, mono: true },
+                { t: d.qoq, mono: true, c: up },
+                { t: d.yoy, mono: true },
+                { t: d.driver },
+              ])}
+            />
+          </div>
+          <div>
+            <div class="mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">NAND 合约价</div>
+            <Table
+              head={["季度", "QoQ", "同比", "驱动"]}
+              rows={nandContract.map((d) => [
+                { t: d.quarter, c: ink, mono: true },
+                { t: d.qoq, mono: true, c: up },
+                { t: d.yoy, mono: true },
+                { t: d.driver },
+              ])}
+            />
+          </div>
+        </div>
+
+        <div class="mt-10 mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">各公司最新业绩</div>
+        <Table
+          head={["公司", "财报", "营收", "营业利润", "利润率", "关键亮点"]}
+          rows={earningsTable.map((e) => [
+            { t: e.company, c: ink },
+            { t: e.period, mono: true },
+            { t: e.revenue, mono: true },
+            { t: e.opIncome, mono: true },
+            { t: e.margin, mono: true },
+            { t: e.highlight },
+          ])}
+        />
+
+        <div class="mt-10 grid gap-6 lg:grid-cols-2">
+          <div>
+            <div class="mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">HBM 市场数据</div>
+            <Table
+              head={["维度", "数据", "来源"]}
+              rows={hbmMarket.map((h) => [
+                { t: h.dimension, c: ink },
+                { t: h.value, mono: true, c: "text-[color:var(--color-data)]" },
+                { t: h.source },
+              ])}
+            />
+          </div>
+          <div>
+            <div class="mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">产业链产值（$B）</div>
+            <Table
+              head={["年份", "总值", "DRAM", "NAND", "HBM", "增长"]}
+              rows={industryValue.map((v) => [
+                { t: v.year, c: ink, mono: true },
+                { t: v.total, mono: true },
+                { t: v.dram, mono: true },
+                { t: v.nand, mono: true },
+                { t: v.hbm, mono: true },
+                { t: v.growth, mono: true, c: up },
+              ])}
+            />
+          </div>
+        </div>
+
+        <div class="mt-10 mb-3 text-[11px] uppercase tracking-wider text-[color:var(--color-ink-mute)]">现货价格走势 · 5/19 当周</div>
+        <Table
+          head={["产品", "4月高点", "5/12", "5/19", "周变化", "判断"]}
+          caption={spotNote}
+          rows={spotPrices.map((s) => [
+            { t: s.product, c: ink },
+            { t: s.aprHigh, mono: true },
+            { t: s.may12, mono: true },
+            { t: s.may19, mono: true },
+            { t: s.weekChange, mono: true, c: down },
+            { t: s.note },
+          ])}
+        />
+      </Section>
+
+      <!-- ───────── 事件 ───────── -->
+      <Section
+        id="events"
+        eyebrow="04 — 事件日历"
+        title="关键事件与追踪"
+        desc="按时间列出影响标的与重要性，并追踪美光 FQ3 财报"
+      >
+        <Table
+          head={["时间", "事件", "影响标的", "重要性"]}
+          rows={calendar.map((e) => [
+            { t: e.time, c: ink, mono: true },
+            { t: e.event },
+            { t: e.tickers, mono: true, c: "text-[color:var(--color-data)]" },
+            { t: stars(e.importance) },
+          ])}
+        />
+
+        <!-- 美光前瞻 -->
+        <div class="mt-8 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/60 p-6">
+          <div class="mb-4 flex items-center gap-2">
+            <span class="h-2 w-2 rounded-full bg-[color:var(--color-heat)]"></span>
+            <h3 class="font-[family-name:var(--font-display)] text-lg font-bold">美光 FQ3 财报前瞻</h3>
+          </div>
+          <div class="grid gap-3 sm:grid-cols-3">
+            {[
+              { k: "预计日期", v: micronPreview.date },
+              { k: "关键验证点", v: micronPreview.checkpoint },
+              { k: "FQ3 营收指引", v: micronPreview.revenueGuide },
+            ].map((s) => (
+              <div class="rounded-xl border border-[color:var(--color-line-soft)] bg-[color:var(--color-base)]/40 p-3">
+                <div class="text-[11px] text-[color:var(--color-ink-mute)]">{s.k}</div>
+                <div class="mt-0.5 font-mono text-sm font-medium text-[color:var(--color-ink)]">{s.v}</div>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-[color:var(--color-ink-mute)]">{micronPreview.mizuho}</p>
+        </div>
+      </Section>
+
+      <footer class="mt-12 border-t border-[color:var(--color-line)] py-8 text-center text-xs text-[color:var(--color-ink-mute)]">
+        <span data-live-note>股价数据：5/19 静态快照（载入后将更新为实时报价）</span><br />
+        数据来源：{META.sources.map((s) => s.name).join("、")} · 研究类数据截至 {META.updated} · 仅供研究参考，非投资建议
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    // 实时股价：调用同源 /api/quotes（CF Pages Function 代理 Yahoo）
+    type Quote = {
+      currency: string; price: number; prevClose: number;
+      dayPct: number | null; ytdPct: number | null; marketState: string | null;
+    };
+
+    const UP = "var(--color-up)";
+    const DOWN = "var(--color-down)";
+    const MUTE = "var(--color-ink-dim)";
+
+    function fmtPrice(q: Quote): string {
+      const { currency, price } = q;
+      if (currency === "KRW") return "₩" + Math.round(price).toLocaleString("en-US");
+      if (currency === "JPY") return "¥" + Math.round(price).toLocaleString("en-US");
+      return "$" + price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function fmtPct(p: number | null): string {
+      if (p == null) return "—";
+      return (p >= 0 ? "+" : "") + p.toFixed(2) + "%";
+    }
+
+    async function run() {
+      const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-quote]"));
+      const syms = Array.from(new Set(cards.flatMap((c) => (c.dataset.quote || "").split(",")).filter(Boolean)));
+      if (!syms.length) return;
+
+      let data: { quotes: Record<string, Quote> };
+      try {
+        const res = await fetch("/api/quotes?symbols=" + encodeURIComponent(syms.join(",")));
+        if (!res.ok) throw new Error("http " + res.status);
+        data = await res.json();
+      } catch {
+        return; // 静默失败：保留静态快照
+      }
+      const q = data.quotes || {};
+      let any = false;
+
+      for (const card of cards) {
+        const symbols = (card.dataset.quote || "").split(",").filter(Boolean);
+        const got = symbols.map((s) => q[s]).filter(Boolean) as Quote[];
+        if (got.length !== symbols.length || !got.length) continue;
+        any = true;
+
+        const priceEl = card.querySelector<HTMLElement>("[data-q-price]");
+        const dayEl = card.querySelector<HTMLElement>("[data-q-day]");
+        const ytdEl = card.querySelector<HTMLElement>("[data-q-ytd]");
+        const live = card.querySelector<HTMLElement>("[data-q-live]");
+
+        if (priceEl) priceEl.textContent = got.map(fmtPrice).join(" / ");
+        if (dayEl) {
+          dayEl.textContent = got.map((x) => fmtPct(x.dayPct)).join(" / ");
+          dayEl.style.color = got.length === 1 ? (got[0].dayPct! >= 0 ? UP : DOWN) : MUTE;
+        }
+        if (ytdEl) {
+          ytdEl.textContent = "YTD " + got.map((x) => fmtPct(x.ytdPct)).join(" / ");
+          ytdEl.style.color = got.length === 1 ? (got[0].ytdPct! >= 0 ? UP : DOWN) : MUTE;
+        }
+        if (live) live.classList.remove("hidden");
+      }
+
+      if (any) {
+        const note = document.querySelector<HTMLElement>("[data-live-note]");
+        if (note) {
+          const t = new Date().toLocaleString("zh-CN", { hour12: false });
+          note.innerHTML = '<span style="color:var(--color-heat)">● 实时</span> 股价 / 财报 / 分析师共识经 Yahoo Finance · ' + t + ' 更新';
+        }
+      }
+    }
+
+    // ── 实时基本面：分析师共识目标价 + TTM 财务 ──
+    type Fund = {
+      currency: string; targetMean: number | null; targetHigh: number | null;
+      targetLow: number | null; numAnalysts: number | null; recommendation: string | null;
+      revenue: string | null; revenueRaw: number | null; grossMargin: string | null; opMargin: string | null;
+      quarterEnd: string | null; qRevenueRaw: number | null; qNetMargin: number | null;
+      earningsDates: number[];
+    };
+    const REC: Record<string, [string, string]> = {
+      strong_buy: ["强力买入", UP], buy: ["买入", UP], hold: ["持有", MUTE],
+      underperform: ["减持", DOWN], sell: ["卖出", DOWN], none: ["—", MUTE],
+    };
+    const sym = (cur: string) => (cur === "KRW" ? "₩" : cur === "JPY" ? "¥" : "$");
+    // 共识目标：完整值
+    const money = (cur: string, v: number) =>
+      cur === "USD"
+        ? "$" + v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        : sym(cur) + Math.round(v).toLocaleString("en-US");
+    // 区间：按量级自适应（百万级用 M、否则完整千分位），两端同一刻度
+    const rangeFmt = (cur: string, lo: number, hi: number) => {
+      const s = sym(cur);
+      const useM = Math.max(lo, hi) >= 1e6;
+      const one = (v: number) =>
+        useM
+          ? (v / 1e6).toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "M"
+          : Math.round(v).toLocaleString("en-US");
+      return s + one(lo) + "–" + s + one(hi);
+    };
+    // TTM 营收：统一中文单位（万亿 / 亿 / B），与「最新业绩」一致
+    const revFmt = (cur: string, raw: number) => {
+      if (cur === "USD") return "$" + (raw / 1e9).toLocaleString("en-US", { maximumFractionDigits: 2 }) + "B";
+      if (raw >= 1e12) return sym(cur) + (raw / 1e12).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " 万亿";
+      return sym(cur) + (raw / 1e8).toLocaleString("en-US", { maximumFractionDigits: 0 }) + " 亿";
+    };
+
+    async function runFund() {
+      const cards = Array.from(document.querySelectorAll<HTMLElement>("[data-fund]"));
+      const syms = Array.from(new Set(cards.flatMap((c) => (c.dataset.fund || "").split(",")).filter(Boolean)));
+      if (!syms.length) return;
+      let resp: { data: Record<string, Fund> };
+      try {
+        const res = await fetch("/api/fundamentals?symbols=" + encodeURIComponent(syms.join(",")));
+        if (!res.ok) throw new Error();
+        resp = await res.json();
+      } catch {
+        return; // 静默：拿不到就不显示这块
+      }
+      const map = resp.data || {};
+      for (const card of cards) {
+        const sym = (card.dataset.fund || "").split(",").find((s) => map[s]);
+        if (!sym) continue;
+        const f = map[sym];
+        if (f.targetMean == null && f.quarterEnd == null) continue;
+        const q = (sel: string) => card.querySelector<HTMLElement>(sel);
+        const tgt = q("[data-fund-target]"), rng = q("[data-fund-range]");
+        const n = q("[data-fund-n]"), rec = q("[data-fund-rec]"), fin = q("[data-fund-fin]");
+        const time = q("[data-fund-time]");
+        // 财报
+        const qend = q("[data-fund-qend]"), edate = q("[data-fund-edate]"), elabel = q("[data-fund-elabel]");
+        const qrev = q("[data-fund-qrev]"), qnm = q("[data-fund-qnm]");
+        if (qend) qend.textContent = f.quarterEnd ?? "—";
+        if (qrev) qrev.textContent = f.qRevenueRaw != null ? revFmt(f.currency, f.qRevenueRaw) : "—";
+        if (qnm) qnm.textContent = f.qNetMargin != null ? f.qNetMargin.toFixed(1) + "%" : "—";
+        if (edate && elabel) {
+          const nowSec = Date.now() / 1000;
+          const ds = (f.earningsDates || []).slice().sort((a, b) => a - b);
+          const future = ds.filter((d) => d > nowSec);
+          const pick = future.length ? future[0] : ds.length ? ds[ds.length - 1] : null;
+          elabel.textContent = future.length ? "下次财报" : "上次公布";
+          edate.textContent = pick ? new Date(pick * 1000).toISOString().slice(0, 10) : "—";
+        }
+        if (tgt) tgt.textContent = money(f.currency, f.targetMean);
+        if (rng && f.targetLow != null && f.targetHigh != null)
+          rng.textContent = rangeFmt(f.currency, f.targetLow, f.targetHigh);
+        if (n) n.textContent = (f.numAnalysts ?? "—") + " 位";
+        if (time) time.textContent = new Date().toLocaleString("zh-CN", { hour: "2-digit", minute: "2-digit", hour12: false });
+        if (rec) {
+          const [lab, col] = REC[f.recommendation || "none"] || REC.none;
+          rec.textContent = lab;
+          rec.style.color = col;
+        }
+        if (fin) {
+          const parts: string[] = [];
+          if (f.revenueRaw != null) parts.push("TTM 营收 " + revFmt(f.currency, f.revenueRaw));
+          else if (f.revenue) parts.push("TTM 营收 " + f.revenue);
+          if (f.grossMargin) parts.push("毛利率 " + f.grossMargin);
+          if (f.opMargin) parts.push("营业利润率 " + f.opMargin);
+          fin.textContent = parts.join(" · ");
+        }
+        card.classList.remove("hidden");
+      }
+    }
+
+    // ── 迷你 YTD 走势图（sparkline）──
+    async function runSpark() {
+      const slots = Array.from(document.querySelectorAll<HTMLElement>("[data-spark]"));
+      const syms = Array.from(new Set(slots.map((s) => s.dataset.spark || "").filter(Boolean)));
+      if (!syms.length) return;
+      let resp: { series: Record<string, { baseline: number | null; points: [number, number][] }> };
+      try {
+        const res = await fetch("/api/history?symbols=" + encodeURIComponent(syms.join(",")));
+        if (!res.ok) throw new Error();
+        resp = await res.json();
+      } catch {
+        return;
+      }
+      const NS = "http://www.w3.org/2000/svg";
+      for (const slot of slots) {
+        const raw = resp.series?.[slot.dataset.spark || ""];
+        if (!raw?.points?.length) continue;
+        const vals = raw.points.map((p) => p[1]);
+        const n = vals.length, w = 96, h = 28, pad = 2;
+        const min = Math.min(...vals), max = Math.max(...vals);
+        const span = max - min || 1;
+        const x = (i: number) => pad + (i / (n - 1)) * (w - 2 * pad);
+        const y = (v: number) => pad + (1 - (v - min) / span) * (h - 2 * pad);
+        const up = vals[n - 1] >= vals[0];
+        const col = up ? "var(--color-up)" : "var(--color-down)";
+        const dLine = vals.map((v, i) => `${i ? "L" : "M"}${x(i).toFixed(1)} ${y(v).toFixed(1)}`).join(" ");
+        const dArea = dLine + ` L${x(n - 1).toFixed(1)} ${h} L${x(0).toFixed(1)} ${h} Z`;
+        const gid = "sg-" + (slot.dataset.spark || "").replace(/[^a-z0-9]/gi, "");
+
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+        svg.setAttribute("width", String(w));
+        svg.setAttribute("height", String(h));
+        svg.setAttribute("class", "overflow-visible");
+        svg.innerHTML =
+          `<defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">` +
+          `<stop offset="0" stop-color="${col}" stop-opacity="0.28"/>` +
+          `<stop offset="1" stop-color="${col}" stop-opacity="0"/></linearGradient></defs>` +
+          `<path d="${dArea}" fill="url(#${gid})"/>` +
+          `<path d="${dLine}" fill="none" stroke="${col}" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round"/>` +
+          `<circle cx="${x(n - 1).toFixed(1)}" cy="${y(vals[n - 1]).toFixed(1)}" r="1.8" fill="${col}"/>`;
+        slot.replaceChildren(svg);
+      }
+    }
+
+    // ── 公司切换（master-detail）──
+    function initCompanySwitch() {
+      const pills = Array.from(document.querySelectorAll<HTMLElement>("[data-select]"));
+      const panels = Array.from(document.querySelectorAll<HTMLElement>("[data-company]"));
+      if (!pills.length) return;
+      const select = (i: string) => {
+        pills.forEach((p) => p.setAttribute("aria-pressed", p.dataset.select === i ? "true" : "false"));
+        panels.forEach((p) => {
+          const on = p.dataset.company === i;
+          p.classList.toggle("hidden", !on);
+          if (on) {
+            p.style.animation = "none";
+            void p.offsetWidth; // 强制 reflow 以重启动画
+            p.style.animation = "panel-in .28s cubic-bezier(.22,1,.36,1)";
+          }
+        });
+      };
+      pills.forEach((p) =>
+        p.addEventListener("click", () => p.dataset.select && select(p.dataset.select))
+      );
+    }
+    initCompanySwitch();
+
+    run();
+    runFund();
+    runSpark();
+  </script>
+</BaseLayout>

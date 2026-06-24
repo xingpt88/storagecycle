@@ -1,0 +1,108 @@
+---
+import CycleArc from "./CycleArc.astro";
+import { META } from "@/data/metrics";
+
+const nav = [
+  { id: "overview", label: "概览", n: "00" },
+  { id: "companies", label: "企业", n: "01" },
+  { id: "industry", label: "行业", n: "02" },
+  { id: "prices", label: "价格", n: "03" },
+  { id: "events", label: "事件", n: "04" },
+];
+---
+
+<!-- ── 桌面：固定左栏 ── -->
+<aside class="fixed inset-y-0 left-0 z-30 hidden w-[248px] flex-col border-r border-[color:var(--color-line)] bg-[color:var(--color-base)]/80 px-6 py-7 backdrop-blur lg:flex">
+  <a href="#overview" class="group flex items-center gap-2.5">
+    <span class="grid h-8 w-8 place-items-center rounded-md border border-[color:var(--color-line)] bg-[color:var(--color-surface)]">
+      <span class="h-3 w-3 rounded-sm bg-[color:var(--color-heat)]"></span>
+    </span>
+    <span class="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-[0.15em] text-[color:var(--color-ink)]">
+      Storage<span class="text-[color:var(--color-heat)]">Cycle</span>
+    </span>
+  </a>
+
+  <!-- 迷你周期表 -->
+  <div class="mt-7 rounded-xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/50 p-4">
+    <div class="text-[10px] uppercase tracking-[0.18em] text-[color:var(--color-ink-mute)]">周期位置</div>
+    <div class="mt-1 flex items-baseline gap-1">
+      <span class="font-mono text-3xl font-bold tnum text-[color:var(--color-heat)]">65</span>
+      <span class="font-mono text-sm text-[color:var(--color-ink-mute)]">%</span>
+    </div>
+    <div class="mt-2 -mb-1">
+      <CycleArc value={65} size={180} showLabels={false} id="mini" />
+    </div>
+    <p class="mt-1 text-[11px] leading-snug text-[color:var(--color-ink-mute)]">上行中段 · 四指标均未见顶</p>
+  </div>
+
+  <!-- 章节导航 -->
+  <nav class="mt-7 flex-1" aria-label="章节">
+    <ul class="space-y-0.5">
+      {nav.map((item) => (
+        <li>
+          <a
+            href={`#${item.id}`}
+            data-nav={item.id}
+            class="nav-link group flex items-center gap-3 rounded-lg px-3 py-2 text-sm text-[color:var(--color-ink-mute)] transition-colors hover:text-[color:var(--color-ink)]"
+          >
+            <span class="nav-bar h-4 w-[2px] rounded-full bg-transparent transition-colors"></span>
+            <span class="font-mono text-[11px] text-[color:var(--color-ink-mute)]/70">{item.n}</span>
+            <span>{item.label}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+
+  <div class="border-t border-[color:var(--color-line)] pt-4 text-[11px] text-[color:var(--color-ink-mute)]">
+    <div class="mb-1 uppercase tracking-wider">数据来源</div>
+    <div class="leading-relaxed">{META.sources.map((s) => s.name).join(" · ")}</div>
+    <div class="mt-2 font-mono">更新 {META.updated}</div>
+  </div>
+</aside>
+
+<!-- ── 移动：顶部章节 chips ── -->
+<div class="sticky top-0 z-30 border-b border-[color:var(--color-line)] bg-[color:var(--color-base)]/90 backdrop-blur lg:hidden">
+  <div class="flex items-center justify-between px-4 py-3">
+    <span class="font-[family-name:var(--font-display)] text-sm font-bold uppercase tracking-[0.15em]">
+      Storage<span class="text-[color:var(--color-heat)]">Cycle</span>
+    </span>
+    <span class="font-mono text-xs text-[color:var(--color-ink-mute)]">周期 <span class="font-bold text-[color:var(--color-heat)]">65%</span></span>
+  </div>
+  <nav class="flex gap-1 overflow-x-auto px-4 pb-2.5" aria-label="章节">
+    {nav.map((item) => (
+      <a href={`#${item.id}`} data-nav={item.id}
+        class="nav-link whitespace-nowrap rounded-full border border-[color:var(--color-line)] px-3 py-1 text-xs text-[color:var(--color-ink-mute)]">
+        {item.label}
+      </a>
+    ))}
+  </nav>
+</div>
+
+<script>
+  // 滚动监听：高亮当前章节
+  const links = Array.from(document.querySelectorAll<HTMLElement>(".nav-link"));
+  const byId = (id: string) => links.filter((l) => l.dataset.nav === id);
+  const setActive = (id: string) => {
+    links.forEach((l) => {
+      const on = l.dataset.nav === id;
+      l.classList.toggle("text-[color:var(--color-ink)]", on);
+      l.classList.toggle("bg-[color:var(--color-surface)]", on && l.querySelector(".nav-bar") !== null);
+      const bar = l.querySelector<HTMLElement>(".nav-bar");
+      if (bar) bar.style.background = on ? "var(--color-heat)" : "transparent";
+      if (!l.querySelector(".nav-bar")) {
+        l.style.borderColor = on ? "var(--color-heat)" : "";
+        l.style.color = on ? "var(--color-ink)" : "";
+      }
+    });
+  };
+  const obs = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) setActive((e.target as HTMLElement).dataset.section || "");
+      });
+    },
+    { rootMargin: "-45% 0px -50% 0px" }
+  );
+  document.querySelectorAll("[data-section]").forEach((s) => obs.observe(s));
+</script>

@@ -1,0 +1,43 @@
+---
+import type { InflectionMetric } from "@/data/metrics";
+interface Props {
+  m: InflectionMetric;
+  index: number;
+}
+const { m, index } = Astro.props;
+
+// 阶段 → 进度条位置（单色，仅位置不同）
+const stageMap: Record<string, { pct: number }> = {
+  上行中段: { pct: 62 },
+  战略性低位: { pct: 28 },
+  历史最高: { pct: 82 },
+};
+const s = stageMap[m.stage] ?? stageMap["上行中段"];
+const chip = "text-[color:var(--color-ink-dim)] border-[color:var(--color-line)] bg-[color:var(--color-surface-2)]";
+---
+
+<div
+  class="reveal rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/70 p-5"
+  style={`animation-delay:${index * 70}ms`}
+>
+  <div class="flex items-start justify-between gap-2">
+    <div class="flex items-center gap-2">
+      <span class="font-mono text-[11px] text-[color:var(--color-ink-mute)]/60">{String(m.id).padStart(2, "0")}</span>
+      <h3 class="text-sm font-semibold text-[color:var(--color-ink)]">{m.name}</h3>
+    </div>
+    <span class={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] font-medium ${chip}`}>{m.stage}</span>
+  </div>
+
+  <div class="mt-3 font-mono text-base font-semibold tnum text-[color:var(--color-ink)]">{m.current}</div>
+
+  <!-- 热度条 -->
+  <div class="mt-3 h-1.5 overflow-hidden rounded-full bg-[color:var(--color-base)]">
+    <div class="h-full rounded-full" style={`width:${s.pct}%;background:var(--color-heat)`}></div>
+  </div>
+
+  <dl class="mt-3 space-y-1 text-[11px] text-[color:var(--color-ink-mute)]">
+    <div class="flex justify-between gap-2"><dt>见顶信号</dt><dd class="font-mono text-[color:var(--color-ink-dim)]">{m.topSignal}</dd></div>
+    <div class="flex justify-between gap-2"><dt>趋势</dt><dd class="text-right text-[color:var(--color-ink-dim)]">{m.trend}</dd></div>
+    <div class="flex justify-between gap-2"><dt>频率</dt><dd class="text-[color:var(--color-ink-dim)]">{m.frequency}</dd></div>
+  </dl>
+</div>

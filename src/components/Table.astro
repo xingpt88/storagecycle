@@ -1,0 +1,47 @@
+---
+// 通用数据表。单元格可带 class 以做着色/等宽。
+export interface Cell {
+  t: string;
+  c?: string; // 额外 class
+  mono?: boolean;
+}
+interface Props {
+  head: string[];
+  rows: Cell[][];
+  caption?: string;
+  headAlign?: ("l" | "r")[];
+}
+const { head, rows, caption, headAlign = [] } = Astro.props;
+const al = (i: number) => (headAlign[i] === "r" ? "text-right" : "text-left");
+---
+
+<div class="overflow-x-auto rounded-xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/60">
+  <table class="w-full border-collapse text-sm">
+    <thead>
+      <tr class="border-b border-[color:var(--color-line)]">
+        {head.map((h, i) => (
+          <th class={`whitespace-nowrap px-4 py-3 font-mono text-[11px] font-medium uppercase tracking-wider text-[color:var(--color-ink-mute)] ${al(i)}`}>
+            {h}
+          </th>
+        ))}
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr class="border-b border-[color:var(--color-line-soft)] transition-colors last:border-0 hover:bg-[color:var(--color-surface-2)]/50">
+          {row.map((cell, i) => (
+            <td
+              class={`px-4 py-3 align-top ${al(i)} ${cell.mono ? "font-mono tnum" : ""} ${cell.c ?? "text-[color:var(--color-ink-dim)]"}`}
+              set:html={cell.t}
+            />
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {caption && (
+    <p class="border-t border-[color:var(--color-line-soft)] px-4 py-3 text-xs leading-relaxed text-[color:var(--color-ink-mute)]">
+      {caption}
+    </p>
+  )}
+</div>

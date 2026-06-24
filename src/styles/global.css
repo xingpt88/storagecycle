@@ -1,0 +1,171 @@
+@import "tailwindcss";
+
+/* ─────────────────────────────────────────────
+   存储周期监控终端 · Design tokens
+   主题：硅晶圆暗房 + 周期热度
+   ───────────────────────────────────────────── */
+@theme {
+  /* surfaces */
+  --color-base: #0b0e14;
+  --color-surface: #141925;
+  --color-surface-2: #1a2030;
+  --color-line: #232a3a;
+  --color-line-soft: #1c2230;
+
+  /* text */
+  --color-ink: #e6e9ef;
+  --color-ink-dim: #aab2c5;
+  --color-ink-mute: #7a8499;
+
+  /* 单一强调色：琥珀。其余收敛为中性，唯独折线图保留多色 */
+  --color-heat: #f2a93b; /* 唯一 UI 强调色 */
+  --color-data: #aeb6c7; /* 原"数据青" → 中性 */
+  --color-up: #3dd68c; /* 仅用于涨/买入 */
+  --color-down: #f25d5d; /* 仅用于跌/卖出 */
+
+  /* 周期弧：单色琥珀（由浅到饱和），不再用多色热度 */
+  --color-cycle-cold: #6b5524;
+  --color-cycle-cool: #b07d2c;
+  --color-cycle-warm: #f2a93b;
+  --color-cycle-hot: #f2a93b;
+
+  /* type */
+  --font-display: "Archivo", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --font-sans: "Inter", "PingFang SC", "Noto Sans SC", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", monospace;
+}
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 2rem;
+  }
+
+  body {
+    background-color: var(--color-base);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    /* 极淡的单色氛围光（仅琥珀） */
+    background-image: radial-gradient(1100px 560px at 82% -12%, rgba(242, 169, 59, 0.045), transparent 60%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background: rgba(242, 169, 59, 0.25);
+    color: #fff;
+  }
+
+  /* number columns align */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .hairline {
+    border-color: var(--color-line);
+  }
+  /* 仅用于主标题：多色渐变（其余地方不要用，改用单色琥珀 text-heat）*/
+  .heat-text {
+    background: linear-gradient(100deg, #5bc8e8, #f2a93b 55%, #f25d5d);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* 公司选择器 pill */
+  .company-pill {
+    border-color: var(--color-line);
+    background: transparent;
+    color: var(--color-ink-dim);
+    transition: background-color 0.15s, border-color 0.15s;
+  }
+  .company-pill:hover {
+    background: color-mix(in srgb, var(--color-surface-2) 60%, transparent);
+  }
+  .company-pill[aria-pressed="true"] {
+    border-color: #3a4458;
+    background: var(--color-surface-2);
+    color: var(--color-ink);
+  }
+
+  /* 切换公司时的淡入 */
+  @keyframes panel-in {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* entrance: fade-up, respects reduced motion */
+  .reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    animation: reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  @keyframes reveal {
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* cycle arc marker draw-in */
+  @keyframes arc-grow {
+    from {
+      stroke-dashoffset: var(--arc-len);
+    }
+    to {
+      stroke-dashoffset: var(--arc-off);
+    }
+  }
+  @keyframes marker-in {
+    0% {
+      opacity: 0;
+      transform: scale(0.4);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+    html {
+      scroll-behavior: auto;
+    }
+    .arc-progress {
+      animation: none !important;
+      stroke-dashoffset: var(--arc-off) !important;
+    }
+    .arc-marker {
+      animation: none !important;
+      opacity: 1 !important;
+    }
+  }
+}
+
+/* thin custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--color-base);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-line);
+  border-radius: 99px;
+  border: 2px solid var(--color-base);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2e3850;
+}
