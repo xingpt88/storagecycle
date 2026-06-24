@@ -9,7 +9,7 @@
  */
 import { execFileSync } from "node:child_process";
 import { writeFileSync } from "node:fs";
-import { scrapeAll, type Row } from "./lib";
+import { scrapeAll, type Row } from "../src/lib";
 
 const sqlStr = (s: string | null) => (s == null ? "NULL" : `'${String(s).replace(/'/g, "''")}'`);
 const sqlNum = (n: number | null) => (n == null ? "NULL" : String(n));

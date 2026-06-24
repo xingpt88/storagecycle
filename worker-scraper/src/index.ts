@@ -4,7 +4,7 @@
  * - fetch(/run): 手动触发一次（测试用）
  * 解析逻辑共用 ../../scraper/lib.ts（本地脚本也用同一份）。
  */
-import { scrapeAll } from "../../scraper/lib";
+import { scrapeAll } from "./lib";
 
 async function runAndStore(env: Env): Promise<number> {
 	const rows = await scrapeAll();
