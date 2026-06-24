@@ -21,14 +21,18 @@ export async function onRequestGet(context) {
       return json({ item, history: results });
     }
 
-    // 最新一天的快照（两类全部品项）
+    // 每个品项取各自最新一条（DRAM/NAND 更新日可能不同）
     const { results } = await db
       .prepare(
-        "SELECT * FROM spot_prices WHERE date = (SELECT MAX(date) FROM spot_prices) ORDER BY category, item"
+        `SELECT s.* FROM spot_prices s
+         JOIN (SELECT item, MAX(date) AS d FROM spot_prices GROUP BY item) m
+           ON s.item = m.item AND s.date = m.d
+         ORDER BY s.category, s.item`
       )
       .all();
 
-    return json({ asOf: results[0]?.date ?? null, count: results.length, rows: results });
+    const asOf = results.reduce((a, r) => (r.date > a ? r.date : a), "");
+    return json({ asOf: asOf || null, count: results.length, rows: results });
   } catch (e) {
     return json({ error: String(e?.message || e) }, 500);
   }
