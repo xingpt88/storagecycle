@@ -74,9 +74,22 @@ const nav = [
   </a>
 
   <div class="border-t border-[color:var(--color-line)] pt-4 text-[11px] text-[color:var(--color-ink-mute)]">
-    <div class="mb-1 uppercase tracking-wider">数据来源</div>
-    <div class="leading-relaxed">{META.sources.map((s) => s.name).join(" · ")}</div>
-    <div class="mt-2 font-mono">更新 {META.updated}</div>
+    <div class="mb-2 uppercase tracking-wider">数据来源</div>
+    <div class="flex -space-x-2">
+      {META.sources.map((s) => (
+        <span
+          title={s.name}
+          class="grid h-7 w-7 place-items-center overflow-hidden rounded-full bg-white ring-2 ring-[color:var(--color-bg)] transition-transform hover:z-10 hover:scale-110"
+        >
+          {s.logo ? (
+            <img src={s.logo} alt={s.name} width="28" height="28" loading="lazy" decoding="async" class="h-4 w-4 object-contain" />
+          ) : (
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#5b6472" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h6"/></svg>
+          )}
+        </span>
+      ))}
+    </div>
+    <div class="mt-3 font-mono">更新 {META.updated}</div>
   </div>
 </aside>
 
