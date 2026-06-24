@@ -1,0 +1,9 @@
+name = "storage-cycle"
+pages_build_output_dir = "dist"
+compatibility_date = "2026-06-24"
+
+# D1：存储现货报价（爬虫写入，Pages Functions 读取，绑定名 DB）
+[[d1_databases]]
+binding = "DB"
+database_name = "storage-cycle-prices"
+database_id = "53a2c9c7-82bf-4b60-848f-8e1d52cdfcb4"
