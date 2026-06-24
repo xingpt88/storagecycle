@@ -11,7 +11,7 @@ export const sources: Source[] = [
   { name: "TrendForce", logo: "/logos/src-trendforce.png" },
   { name: "花旗", logo: "/logos/src-citi.png" },
   { name: "JPMorgan", logo: "/logos/src-jpmorgan.png" },
-  { name: "各公司财报" }, // 非品牌，用通用图标
+  { name: "各公司财报", logo: "/logos/micron.png" }, // 用一家公司 logo 代表
   { name: "DRAMeXchange", logo: "/logos/src-dramexchange.png" },
   { name: "Yahoo Finance", logo: "/logos/src-yahoo.png" },
 ];
