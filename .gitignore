@@ -22,3 +22,13 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# editor / tooling
+.vscode/
+
+# wrangler local state & cache
+.wrangler/
+
+# agent instruction files
+AGENTS.md
+CLAUDE.md
