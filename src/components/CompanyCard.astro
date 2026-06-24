@@ -74,6 +74,16 @@ const deltaColor = down ? "text-[color:var(--color-down)]" : "text-[color:var(--
           <div class="col-span-2"><span class="text-[color:var(--color-ink-mute)]">区间</span> <span data-fund-range class="font-mono text-[color:var(--color-ink-dim)]">—</span></div>
         </div>
         <div data-fund-fin class="mt-1.5 text-[11px] text-[color:var(--color-ink-dim)]"></div>
+
+        <!-- 估值 -->
+        <div class="mt-2.5 flex items-center border-t border-[color:var(--color-heat)]/15 pt-2.5 text-[10px] uppercase tracking-wider">
+          <span class="text-[color:var(--color-ink-mute)]">估值</span>
+        </div>
+        <div class="mt-1.5 grid grid-cols-2 gap-x-3 gap-y-1.5 text-[11px]">
+          <div><span class="text-[color:var(--color-ink-mute)]">市值</span> <span data-fund-mcap class="font-mono text-[color:var(--color-ink)]">—</span></div>
+          <div><span class="text-[color:var(--color-ink-mute)]">远期 P/E</span> <span data-fund-fpe class="font-mono text-[color:var(--color-ink)]">—</span></div>
+          <div class="col-span-2"><span class="text-[color:var(--color-ink-mute)]">距 52 周高</span> <span data-fund-52w class="font-mono text-[color:var(--color-ink-dim)]">—</span></div>
+        </div>
       </div>
 
       <!-- 5/19 研报快照 -->

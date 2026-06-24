@@ -25,7 +25,7 @@ async function getCrumb() {
 
 async function fetchFund(symbol, crumb, cookie) {
   const modules =
-    "financialData,price,incomeStatementHistoryQuarterly,calendarEvents,defaultKeyStatistics";
+    "financialData,price,incomeStatementHistoryQuarterly,calendarEvents,defaultKeyStatistics,summaryDetail";
   const url =
     `https://query1.finance.yahoo.com/v10/finance/quoteSummary/${encodeURIComponent(symbol)}` +
     `?modules=${modules}&crumb=${encodeURIComponent(crumb)}`;
@@ -41,6 +41,7 @@ async function fetchFund(symbol, crumb, cookie) {
   const p = r.price || {};
   const ks = r.defaultKeyStatistics || {};
   const ce = r.calendarEvents || {};
+  const sd = r.summaryDetail || {};
 
   // 最新季度利润表（拿当季营收 + 净利率 + 季度末日期）
   const q = (r.incomeStatementHistoryQuarterly || {}).incomeStatementHistory || [];
@@ -74,6 +75,12 @@ async function fetchFund(symbol, crumb, cookie) {
     qRevenueRaw: qRevRaw,
     qNetMargin,
     earningsDates,
+    // 估值
+    marketCapRaw: sd.marketCap?.raw ?? ks.marketCap?.raw ?? null,
+    forwardPE: sd.forwardPE?.raw ?? ks.forwardPE?.raw ?? null,
+    trailingPE: sd.trailingPE?.raw ?? null,
+    week52Low: sd.fiftyTwoWeekLow?.raw ?? null,
+    week52High: sd.fiftyTwoWeekHigh?.raw ?? null,
   };
 }
 

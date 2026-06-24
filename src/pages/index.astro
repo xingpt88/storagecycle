@@ -451,6 +451,8 @@ const stars = (n: number) =>
       revenue: string | null; revenueRaw: number | null; grossMargin: string | null; opMargin: string | null;
       quarterEnd: string | null; qRevenueRaw: number | null; qNetMargin: number | null;
       earningsDates: number[];
+      price: number | null; marketCapRaw: number | null; forwardPE: number | null;
+      week52Low: number | null; week52High: number | null;
     };
     const REC: Record<string, [string, string]> = {
       strong_buy: ["强力买入", UP], buy: ["买入", UP], hold: ["持有", MUTE],
@@ -477,6 +479,11 @@ const stars = (n: number) =>
       if (cur === "USD") return "$" + (raw / 1e9).toLocaleString("en-US", { maximumFractionDigits: 2 }) + "B";
       if (raw >= 1e12) return sym(cur) + (raw / 1e12).toLocaleString("en-US", { maximumFractionDigits: 2 }) + " 万亿";
       return sym(cur) + (raw / 1e8).toLocaleString("en-US", { maximumFractionDigits: 0 }) + " 亿";
+    };
+    // 市值：USD 用 T/B，韩日用 万亿/亿
+    const mcapFmt = (cur: string, raw: number) => {
+      if (cur === "USD") return raw >= 1e12 ? "$" + (raw / 1e12).toFixed(2) + "T" : "$" + (raw / 1e9).toFixed(0) + "B";
+      return revFmt(cur, raw);
     };
 
     async function runFund() {
@@ -532,6 +539,18 @@ const stars = (n: number) =>
           if (f.grossMargin) parts.push("毛利率 " + f.grossMargin);
           if (f.opMargin) parts.push("营业利润率 " + f.opMargin);
           fin.textContent = parts.join(" · ");
+        }
+        // 估值
+        const mcap = q("[data-fund-mcap]"), fpe = q("[data-fund-fpe]"), w52 = q("[data-fund-52w]");
+        if (mcap) mcap.textContent = f.marketCapRaw != null ? mcapFmt(f.currency, f.marketCapRaw) : "—";
+        if (fpe) fpe.textContent = f.forwardPE != null ? f.forwardPE.toFixed(1) : "—";
+        if (w52) {
+          if (f.price != null && f.week52High && f.week52Low) {
+            const d = (f.price / f.week52High - 1) * 100;
+            w52.textContent =
+              (d >= 0 ? "+" : "") + d.toFixed(1) + "%" +
+              "（区间 " + money(f.currency, f.week52Low) + "–" + money(f.currency, f.week52High) + "）";
+          } else w52.textContent = "—";
         }
         card.classList.remove("hidden");
       }
