@@ -33,7 +33,6 @@ import {
   hbmMarket,
   industryValue,
   calendar,
-  micronPreview,
 } from "@/data/metrics";
 
 const up = "text-[color:var(--color-up)]";
@@ -305,7 +304,7 @@ const stars = (n: number) =>
         id="events"
         eyebrow="04 — 事件日历"
         title="关键事件与追踪"
-        desc="按时间列出影响标的与重要性，并追踪美光 FQ3 财报"
+        desc="按时间列出影响标的与重要性"
       >
         <Table
           head={["时间", "事件", "影响标的", "重要性"]}
@@ -316,27 +315,6 @@ const stars = (n: number) =>
             { t: stars(e.importance) },
           ])}
         />
-
-        <!-- 美光前瞻 -->
-        <div class="mt-8 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/60 p-6">
-          <div class="mb-4 flex items-center gap-2">
-            <span class="h-2 w-2 rounded-full bg-[color:var(--color-heat)]"></span>
-            <h3 class="font-[family-name:var(--font-display)] text-lg font-bold">美光 FQ4 财报前瞻</h3>
-          </div>
-          <div class="grid gap-3 sm:grid-cols-3">
-            {[
-              { k: "预计日期", v: micronPreview.date },
-              { k: "关键验证点", v: micronPreview.checkpoint },
-              { k: "FQ4 营收指引", v: micronPreview.revenueGuide },
-            ].map((s) => (
-              <div class="rounded-xl border border-[color:var(--color-line-soft)] bg-[color:var(--color-bg)]/40 p-3">
-                <div class="text-[11px] text-[color:var(--color-ink-mute)]">{s.k}</div>
-                <div class="mt-0.5 font-mono text-sm font-medium text-[color:var(--color-ink)]">{s.v}</div>
-              </div>
-            ))}
-          </div>
-          <p class="mt-4 text-sm leading-relaxed text-[color:var(--color-ink-mute)]">{micronPreview.mizuho}</p>
-        </div>
       </Section>
 
       <footer class="mt-12 border-t border-[color:var(--color-line)] py-8 text-center text-xs text-[color:var(--color-ink-mute)]">

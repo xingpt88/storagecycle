@@ -470,16 +470,6 @@ export const earningsTable: EarningsRow[] = [
   { company: "长鑫存储", period: "2026 Q1", revenue: "508 亿元", opIncome: "330 亿元", margin: "—", highlight: "+719% YoY，全球市占率 7.67%" },
 ];
 
-// ── 十二、重大事件追踪 ────────────────────────────
-// 注：三星罢工已于 5/20 达成临时协议、5/27 工会以 73.7% 投票通过（半导体 OP 10.5% 入奖金池），
-// 风险解除，相关追踪内容已移除。
-export const micronPreview = {
-  date: "约 2026 年 9 月底（FQ4 FY26，待 Yahoo 标定）",
-  checkpoint: "Q4 营收 $50B、毛利率 86%、NG EPS ~$31 指引能否兑现",
-  revenueGuide: "$50B（毛利率 86%）",
-  mizuho: "美银 6/24 上调目标价至 $1,500（↑$950）维持买入：FQ3 营收 $41.46B 超预期约 $5.7B，Q4 指引再超共识约 $7B。",
-};
-
 // ── 关键摘要卡片 ──────────────────────────────────
 export const headlineStats = [
   { label: "2026 产业产值", value: "$5,516 亿", sub: "2027E $8,427 亿 · +53% YoY" },
