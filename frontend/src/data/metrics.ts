@@ -207,14 +207,14 @@ export const companies: Company[] = [
     yf: ["MU"],
     logos: ["/logos/micron.png"],
     metrics: [
-      { id: 1, name: "HBM4 12H 放量进度", signal: "FQ3/FQ4 财报 HBM 收入占比", status: "calendar 2026 HBM 供应已全部锁定（含 HBM4）" },
-      { id: 2, name: "服务器 DRAM 合约价走势", signal: "季度 ASP 环比", status: "逐季大幅上涨，FQ3 营收 +74% QoQ" },
-      { id: 3, name: "SCA 硬证据", signal: "财报电话会披露", status: "多年期 SCA 落地，目标 2030 年前半数营收入约" },
-      { id: 4, name: "数据中心 NAND 增长持续性", signal: "数据中心收入", status: "核心数据中心 BU 营收 $11.5B、毛利率 87%" },
+      { id: 1, name: "HBM4 12H 放量进度", signal: "FQ3/FQ4 财报 HBM 收入占比", status: "HBM4 已发货 >$10 亿营收，12H 爬坡速度为 HBM3E 两倍；CY2026 HBM 供应全部锁定" },
+      { id: 2, name: "服务器 DRAM 合约价走势", signal: "季度 ASP 环比", status: "FQ3 DRAM 营收 $31.3B（+67% QoQ），实现 ASP 环比 +low-60s%" },
+      { id: 3, name: "SCA 硬证据", signal: "财报电话会披露", status: "已签 16 份 SCA（5 年期至 2030）；14 份按最低价累计营收 ~$1000 亿，预收押金/承诺 $220 亿" },
+      { id: 4, name: "数据中心 NAND 增长持续性", signal: "数据中心收入", status: "数据中心营收 >$250 亿（年化 >$1000 亿）；数据中心 SSD >$50 亿、环比翻倍" },
       { id: 5, name: "capex 与 FCF 平衡", signal: "资本开支计划和自由现金流", status: "FQ3 capex $7.1B，调整后 FCF $18.3B（正）" },
       { id: 6, name: "FQ3 财报兑现度", signal: "FQ3 实际 vs 指引", status: "NG 毛利率 84.9%，远超 81% 指引；Q4 指引 86%" },
     ],
-    earnings: { period: "FQ3 FY26", revenue: "$41.46B", opIncome: "$33.7B（NG，OPM 81%）", margin: "84.9%（Non-GAAP）", highlight: "营收创纪录 +74% QoQ、超预期 $5.7B；Q4 指引 $50B、毛利率 86%" },
+    earnings: { period: "FQ3 FY26", revenue: "$41.46B", opIncome: "$33.7B（NG，OPM 81%）", margin: "84.9%（Non-GAAP）", highlight: "+74% QoQ / +346% YoY；DRAM $31.3B、NAND $9.9B；Q4 指引 $50B、毛利率 86%、EPS $31" },
     targets: [
       { bank: "美银（V. Arya）", target: "$1,500（↑$950）", rating: "买入", date: "6月24日" },
       { bank: "DA Davidson", target: "$1,000", rating: "买入", date: "4月28日" },
@@ -464,7 +464,7 @@ export interface EarningsRow {
 export const earningsTable: EarningsRow[] = [
   { company: "SK海力士", period: "2026 Q1", revenue: "₩52.3 万亿", opIncome: "₩37.6 万亿", margin: "72%", highlight: "HBM 收入 >30%，OP Margin 72%" },
   { company: "三星电子", period: "2026 Q1", revenue: "₩79.1 万亿", opIncome: "₩57.2 万亿（DS）", margin: "65.7%（DS）", highlight: "HBM4 量产，传统 DRAM 利润率 >HBM" },
-  { company: "美光", period: "FQ3 FY26", revenue: "$41.46B", opIncome: "$33.7B（NG）", margin: "84.9%（Non-GAAP）", highlight: "营收创纪录 +74% QoQ；Q4 指引 $50B、毛利率 86%" },
+  { company: "美光", period: "FQ3 FY26", revenue: "$41.46B", opIncome: "$33.7B（NG）", margin: "84.9%（Non-GAAP）", highlight: "+74% QoQ / +346% YoY；DRAM $31.3B、NAND $9.9B；Q4 指引 $50B、86%、EPS $31" },
   { company: "闪迪", period: "3Q FY26", revenue: "$31.8B", opIncome: "—", margin: "69.5%（Non-GAAP）", highlight: "数据中心 NAND +233% QoQ" },
   { company: "铠侠", period: "FY26 Q4", revenue: "¥1.003 万亿", opIncome: "¥5,968 亿", margin: "59.5%", highlight: "FY27 Q1 指引 ¥1.75 万亿" },
   { company: "长鑫存储", period: "2026 Q1", revenue: "508 亿元", opIncome: "330 亿元", margin: "—", highlight: "+719% YoY，全球市占率 7.67%" },
