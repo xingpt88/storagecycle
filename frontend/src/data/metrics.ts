@@ -1,6 +1,6 @@
 // 存储行业与企业监控指标体系
-// 最后更新：2026年5月19日
-// 数据来源：TrendForce、花旗、JPMorgan、各公司财报、DRAMeXchange、Yahoo Finance
+// 最后更新：2026年6月25日
+// 数据来源：TrendForce、花旗、JPMorgan、美银、各公司财报、DRAMeXchange、Yahoo Finance
 
 export interface Source {
   name: string;
@@ -18,7 +18,7 @@ export const sources: Source[] = [
 
 export const META = {
   title: "存储行业与企业监控指标体系",
-  updated: "2026年5月19日",
+  updated: "2026年6月25日",
   sources,
   cycleSummary:
     "上行周期中段（约 60–70% 位置），四个拐点指标均指向「周期未到顶点」。",
@@ -200,26 +200,26 @@ export const companies: Company[] = [
     ticker: "MU",
     region: "美国",
     focus: ["DRAM", "NAND", "HBM3E"],
-    prevClose: "$681.55",
-    last: "$661.45",
-    dayChange: "-2.95%",
-    ytd: "+125%+",
+    prevClose: "$1,051.77",
+    last: "$1,048.51",
+    dayChange: "-0.31%",
+    ytd: "+255%+",
     yf: ["MU"],
     logos: ["/logos/micron.png"],
     metrics: [
-      { id: 1, name: "HBM4 12H 放量进度", signal: "FQ3/FQ4 财报 HBM 收入占比", status: "已量产，开始爬坡" },
-      { id: 2, name: "服务器 DRAM 合约价走势", signal: "季度 ASP 环比", status: "逐季大幅上涨" },
-      { id: 3, name: "SCA 硬证据", signal: "财报电话会披露", status: "FQ2 已有初步披露" },
-      { id: 4, name: "数据中心 NAND 增长持续性", signal: "FQ3 数据中心收入", status: "FQ2 收入翻倍" },
-      { id: 5, name: "capex 与 FCF 平衡", signal: "资本开支计划和自由现金流", status: "FY26 超 $25B，仍正 FCF" },
-      { id: 6, name: "FQ3 毛利率 81% 兑现", signal: "FQ3 实际财报", status: "指引已给出，5月底验证" },
+      { id: 1, name: "HBM4 12H 放量进度", signal: "FQ3/FQ4 财报 HBM 收入占比", status: "calendar 2026 HBM 供应已全部锁定（含 HBM4）" },
+      { id: 2, name: "服务器 DRAM 合约价走势", signal: "季度 ASP 环比", status: "逐季大幅上涨，FQ3 营收 +74% QoQ" },
+      { id: 3, name: "SCA 硬证据", signal: "财报电话会披露", status: "多年期 SCA 落地，目标 2030 年前半数营收入约" },
+      { id: 4, name: "数据中心 NAND 增长持续性", signal: "数据中心收入", status: "核心数据中心 BU 营收 $11.5B、毛利率 87%" },
+      { id: 5, name: "capex 与 FCF 平衡", signal: "资本开支计划和自由现金流", status: "FQ3 capex $7.1B，调整后 FCF $18.3B（正）" },
+      { id: 6, name: "FQ3 财报兑现度", signal: "FQ3 实际 vs 指引", status: "NG 毛利率 84.9%，远超 81% 指引；Q4 指引 86%" },
     ],
-    earnings: { period: "FQ2 FY26", revenue: "$23.86B", opIncome: "—", margin: "75%（Non-GAAP）", highlight: "DRAM +207% YoY，FQ3 指引 $33.5B" },
+    earnings: { period: "FQ3 FY26", revenue: "$41.46B", opIncome: "$33.7B（NG，OPM 81%）", margin: "84.9%（Non-GAAP）", highlight: "营收创纪录 +74% QoQ、超预期 $5.7B；Q4 指引 $50B、毛利率 86%" },
     targets: [
+      { bank: "美银（V. Arya）", target: "$1,500（↑$950）", rating: "买入", date: "6月24日" },
+      { bank: "DA Davidson", target: "$1,000", rating: "买入", date: "4月28日" },
       { bank: "花旗", target: "$840", rating: "买入", date: "5月18日" },
       { bank: "Mizuho", target: "$800（↑$740）", rating: "跑赢大盘", date: "5月19日" },
-      { bank: "DA Davidson", target: "$1,000", rating: "买入", date: "4月28日" },
-      { bank: "TD Cowen", target: "$660（↑$550）", rating: "—", date: "5月" },
       { bank: "摩根士丹利", target: "$520", rating: "增持", date: "4月28日" },
     ],
   },
@@ -349,10 +349,10 @@ export interface CalendarEvent {
 }
 
 export const calendar: CalendarEvent[] = [
-  { time: "5月底", event: "美光 FQ3 FY26 财报（毛利率 81% 验证）", tickers: "MU", importance: 5 },
+  { time: "已公布 6/24", event: "美光 FQ3 FY26：营收 $41.46B、NG 毛利率 84.9%，Q4 指引 $50B/86%", tickers: "MU", importance: 5 },
   { time: "7月", event: "SK海力士 Q2 FY26 财报", tickers: "000660.KS", importance: 5 },
   { time: "7月", event: "铠侠 FY27 Q1 财报（OP Margin 74% 验证）", tickers: "285A.T", importance: 4 },
-  { time: "8月", event: "美光 FQ4 FY26 财报（全年业绩）", tickers: "MU", importance: 4 },
+  { time: "9月底（预计）", event: "美光 FQ4 FY26 财报（Q4 指引 $50B、毛利率 86% 验证）", tickers: "MU", importance: 5 },
   { time: "Q3", event: "合约价格 Q3 涨幅（是否放缓）", tickers: "全行业", importance: 4 },
   { time: "H2 2026", event: "HBM4 16H 量产进度", tickers: "SK海力士, 三星, MU", importance: 4 },
   { time: "2027年", event: "新增产能建设计划（是否过度扩张）", tickers: "全行业", importance: 3 },
@@ -371,7 +371,7 @@ export interface ContractPrice {
 
 export const dramContract: ContractPrice[] = [
   { quarter: "2025 Q4", qoq: "+18~23%（上修后）", yoy: "—", driver: "CSP 加单、DDR5 需求" },
-  { quarter: "2026 Q1", qoq: "+90~95%（上修后）", yoy: "—", driver: "AI 服务器需求、产能转向 HBM" },
+  { quarter: "2026 Q1", qoq: "+93~98%（实际）", yoy: "—", driver: "实际落地超上修；存储产业营收 +81% QoQ 达 $970 亿" },
   { quarter: "2026 Q2", qoq: "+58~63%", yoy: "~+186%", driver: "服务器 DRAM、RDIMM 焦点" },
   { quarter: "2026 Q3（E）", qoq: "+30~40%（预计）", yoy: "—", driver: "涨幅斜率放缓但仍强劲" },
   { quarter: "2026 Q4（E）", qoq: "+15~25%（预计）", yoy: "—", driver: "旺季效应" },
@@ -386,6 +386,7 @@ export const nandContract: ContractPrice[] = [
 ];
 
 export const trendForceJudgments: string[] = [
+  "1Q26（实际）存储产业营收 $970 亿、+81% QoQ；DRAM 厂商份额：三星 38.5% / SK海力士 28.8% / 美光 22.4%（TrendForce 6/1）",
   "2026 年存储产业产值：$5,516 亿美元，2027 年预计达 $8,427 亿美元（+53% YoY）",
   "合约价涨势延续至 2027 年：AI 基础设施需求长期支撑",
   "新增产能 2027 年底或 2028 年才能大规模释放：供应紧张态势持续",
@@ -401,7 +402,8 @@ export interface HbmDatum {
 }
 
 export const hbmMarket: HbmDatum[] = [
-  { dimension: "2025 年 HBM 市场规模", value: "~$18B", source: "Yole Group" },
+  { dimension: "HBM TAM 2028（E）", value: "~$1000 亿（较前预期提前两年达成）", source: "美光 FQ3" },
+  { dimension: "2025 年 HBM 市场规模", value: "~$18B（Yole）/ ~$35B（美光口径）", source: "Yole / 美光" },
   { dimension: "2026 年 HBM 市场规模（E）", value: "~$45–50B", source: "花旗 / JPM" },
   { dimension: "2027 年 HBM 市场规模（E）", value: "~$80–100B", source: "花旗" },
   { dimension: "2030 年 HBM 市场规模（E）", value: "~$150B+", source: "Yole Group" },
@@ -462,7 +464,7 @@ export interface EarningsRow {
 export const earningsTable: EarningsRow[] = [
   { company: "SK海力士", period: "2026 Q1", revenue: "₩52.3 万亿", opIncome: "₩37.6 万亿", margin: "72%", highlight: "HBM 收入 >30%，OP Margin 72%" },
   { company: "三星电子", period: "2026 Q1", revenue: "₩79.1 万亿", opIncome: "₩57.2 万亿（DS）", margin: "65.7%（DS）", highlight: "HBM4 量产，传统 DRAM 利润率 >HBM" },
-  { company: "美光", period: "FQ2 FY26", revenue: "$23.86B", opIncome: "—", margin: "75%（Non-GAAP）", highlight: "DRAM +207% YoY，FQ3 指引 $33.5B" },
+  { company: "美光", period: "FQ3 FY26", revenue: "$41.46B", opIncome: "$33.7B（NG）", margin: "84.9%（Non-GAAP）", highlight: "营收创纪录 +74% QoQ；Q4 指引 $50B、毛利率 86%" },
   { company: "闪迪", period: "3Q FY26", revenue: "$31.8B", opIncome: "—", margin: "69.5%（Non-GAAP）", highlight: "数据中心 NAND +233% QoQ" },
   { company: "铠侠", period: "FY26 Q4", revenue: "¥1.003 万亿", opIncome: "¥5,968 亿", margin: "59.5%", highlight: "FY27 Q1 指引 ¥1.75 万亿" },
   { company: "长鑫存储", period: "2026 Q1", revenue: "508 亿元", opIncome: "330 亿元", margin: "—", highlight: "+719% YoY，全球市占率 7.67%" },
@@ -472,10 +474,10 @@ export const earningsTable: EarningsRow[] = [
 // 注：三星罢工已于 5/20 达成临时协议、5/27 工会以 73.7% 投票通过（半导体 OP 10.5% 入奖金池），
 // 风险解除，相关追踪内容已移除。
 export const micronPreview = {
-  date: "2026-06-24（Yahoo 标定下次财报）",
-  checkpoint: "毛利率 81% 指引是否兑现",
-  revenueGuide: "$33.5B",
-  mizuho: "Mizuho 5/19 上调目标价至 $800：FY26 EPS 预测高过共识 14%，FY27 高 23%",
+  date: "约 2026 年 9 月底（FQ4 FY26，待 Yahoo 标定）",
+  checkpoint: "Q4 营收 $50B、毛利率 86%、NG EPS ~$31 指引能否兑现",
+  revenueGuide: "$50B（毛利率 86%）",
+  mizuho: "美银 6/24 上调目标价至 $1,500（↑$950）维持买入：FQ3 营收 $41.46B 超预期约 $5.7B，Q4 指引再超共识约 $7B。",
 };
 
 // ── 关键摘要卡片 ──────────────────────────────────

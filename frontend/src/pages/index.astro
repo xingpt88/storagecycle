@@ -321,13 +321,13 @@ const stars = (n: number) =>
         <div class="mt-8 rounded-2xl border border-[color:var(--color-line)] bg-[color:var(--color-surface)]/60 p-6">
           <div class="mb-4 flex items-center gap-2">
             <span class="h-2 w-2 rounded-full bg-[color:var(--color-heat)]"></span>
-            <h3 class="font-[family-name:var(--font-display)] text-lg font-bold">美光 FQ3 财报前瞻</h3>
+            <h3 class="font-[family-name:var(--font-display)] text-lg font-bold">美光 FQ4 财报前瞻</h3>
           </div>
           <div class="grid gap-3 sm:grid-cols-3">
             {[
               { k: "预计日期", v: micronPreview.date },
               { k: "关键验证点", v: micronPreview.checkpoint },
-              { k: "FQ3 营收指引", v: micronPreview.revenueGuide },
+              { k: "FQ4 营收指引", v: micronPreview.revenueGuide },
             ].map((s) => (
               <div class="rounded-xl border border-[color:var(--color-line-soft)] bg-[color:var(--color-bg)]/40 p-3">
                 <div class="text-[11px] text-[color:var(--color-ink-mute)]">{s.k}</div>
