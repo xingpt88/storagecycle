@@ -1,4 +1,4 @@
-name = "storage-cycle"
+name = "storage-cycle-monitor"
 pages_build_output_dir = "dist"
 compatibility_date = "2026-06-24"
 
@@ -6,4 +6,4 @@ compatibility_date = "2026-06-24"
 [[d1_databases]]
 binding = "DB"
 database_name = "storage-cycle-prices"
-database_id = "53a2c9c7-82bf-4b60-848f-8e1d52cdfcb4"
+database_id = "56bae37c-823c-405d-8a99-e44177b00d95"

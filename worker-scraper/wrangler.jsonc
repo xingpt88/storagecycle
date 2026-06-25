@@ -3,6 +3,8 @@
 	"main": "src/index.ts",
 	"compatibility_date": "2026-06-24",
 	"compatibility_flags": ["nodejs_compat"],
+	// 仅 cron 定时触发，不需要 workers.dev HTTP 路由
+	"workers_dev": false,
 	"observability": {
 		"enabled": true,
 	},
@@ -15,7 +17,7 @@
 		{
 			"binding": "DB",
 			"database_name": "storage-cycle-prices",
-			"database_id": "53a2c9c7-82bf-4b60-848f-8e1d52cdfcb4",
+			"database_id": "56bae37c-823c-405d-8a99-e44177b00d95",
 		},
 	],
 }
